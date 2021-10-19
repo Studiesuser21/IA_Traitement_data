@@ -66,6 +66,7 @@ df_dmesg["process"]="no process"
 df_dmesg["message_log"]=df_dmesg[0]
 df_dmesg["source"]="dmesg"
 df_dmesg['date_traitement']=datetime_object
+del df_dmesg[1]
 
 #Traitement syslog
 
