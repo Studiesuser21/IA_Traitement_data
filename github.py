@@ -45,6 +45,17 @@ df_debug =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\debug.csv',header=No
 df_casperlog =pd.read_csv(r'casperlog.csv',header=None,error_bad_lines=False)
 df_auth=pd.read_csv(r'auth.csv',header=None,error_bad_lines=False)
 
+
+#Formatage de la date
+def formatagedate(date_d):
+    MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
+            "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12"}   
+    liste_date = date_d.split()
+    if len(liste_date)== 3:
+        mois = MOIS.get("%s"%liste_date[0])
+        date_d = "2021"+"/"+str(mois)+"/"+ liste_date[1]+" "+liste_date[2]
+    return(date_d)
+
 #Traitement alternative
 
 df_alternative['raw']=df_alternative[0]
@@ -56,17 +67,6 @@ df_alternative['process']="no process"
 df_alternative['message_log']=df_alternative[0]
 df_alternative['source']="alternatives"
 df_alternative['date_traitement']=datetime
-
-
-#Formatage de la date
-def formatagedate(date_d):
-    MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
-            "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12"}   
-    liste_date = date_d.split()
-    if len(liste_date)== 3:
-        mois = MOIS.get("%s"%liste_date[0])
-        date_d = "2021"+"/"+str(mois)+"/"+ liste_date[1]+" "+liste_date[2]
-    return(date_d)
 
 
 #Traitement dmesg
@@ -146,6 +146,7 @@ df_kern['process']=df_kern[0].str.extract('^(\S+)\s',expand=False).str.strip()
 df_kern[0]=df_kern[0].str.replace('^(\S+)\s','')
 df_kern['message_log']=df_kern[0]
 df_kern['source']="kern"
+df_kern['date_traitement']=datetime
 df_kern.drop([0],axis=1)
 
 #Traitement debug
@@ -158,6 +159,7 @@ df_debug[0]=df_debug[0].str.replace(r'(\W[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z
 df_debug['process']=df_debug['process'].replace(np.nan,"no process")
 df_debug['message_log']=df_debug[0]
 df_debug['source']="debug"
+df_debug['date_traitement']=datetime
 df_debug.drop([0],axis=1)
 
 
@@ -165,7 +167,7 @@ df_debug.drop([0],axis=1)
 
 df_casperlog ['raw']=df_casperlog [0]
 df_casperlog ['date']=df_casperlog [0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
-df[0]=df[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_casperlog[0]=df_casperlog[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
 df_casperlog ['date']= df_casperlog ['date'].fillna("0000/00/00 00:00:00")
 df_casperlog ['utilisateur']=df_casperlog [0].str.extract('^( \S+):\s',expand=False).str.strip()
 df_casperlog [0]=df_casperlog [0].str.replace('^( \S+):\s','')
@@ -174,6 +176,8 @@ df_casperlog ['process']=df_casperlog [0].str.extract('^(\S+):\s',expand=False).
 df_casperlog [0]=df_casperlog [0].str.replace('^(\S+):\s','')
 df_casperlog ['process']= df_casperlog ['process'].fillna("no process")
 df_casperlog ['message_log']=df_casperlog [0]
+df_casperlog['source']="casperlog"
+df_casperlog['date_traitement']=datetime
 df_casperlog = df_casperlog .drop([0],axis=1)
 
 #Traitement auth
@@ -189,10 +193,15 @@ df_auth['process']=df_auth [0].str.extract('^(\S+)\s',expand=False).str.strip()
 df_auth[0]=df_auth[0].str.replace('^(\S+):\s','')
 df_auth['process']= df_auth['process'].fillna("no process")
 df_auth['message_log']=df_auth[0]
+df_auth['source']="auth"
+df_auth['date_traitement']=datetime
 df_auth= df_auth.drop([0],axis=1)
 
+#Création du dataframe final
 
-
+df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg,df_alternative], ignore_index=True)
 
 #formatage date
 df['date'] = df['date'].apply(formatagedate)
+
+
