@@ -1,3 +1,4 @@
+!cd /var/log
 !cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
 !cat cache.log > /home/xibalpa/squidcachelog.csv
 !cat kern.log.1 > /home/xibalpa/kernlog1.csv
@@ -7,7 +8,8 @@
 !cat alternatives.log > /home/xibalpa/alternatives.csv
 !cat auth.log > /home/xibalpa/auth.csv
 !cat kern.log > /home/xibalpa/kern.csv
-!cat dmesg > /home/xibalpa/dmesg.csv
+!cat dmseg > /home/xibalpa/dmesg.csv
+!cat installer/syslog > /home/xibalga/sysloginstaller.csv
 
 
 
@@ -27,16 +29,18 @@ import datetime
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
-df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
-df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
-df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
-df_casperlog =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\casperlog.csv',header=None,error_bad_lines=False)
-df_auth=pd.read_csv(r'C:\Users\natha\Documents\projet_Log\auth.csv',header=None,error_bad_lines=False)
-df_kernlog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kernlog1.csv',header=None,error_bad_lines=False)
-df_kern =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kern.csv',header=None,error_bad_lines=False)
-df_debug =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\debug.csv',header=None,error_bad_lines=False)
-df_alternative =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\alternatives.csv',header=None,error_bad_lines=False)
-df_dmesg =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\dmesg.csv',header=None,error_bad_lines=False)
+df_syslog =pd.read_csv('/home/xibalpa/syslog.csv',header=None,error_bad_lines=False)
+df_squidcachelog1 =pd.read_csv('/home/xibalpa/squidcachelog1.csv',header=None,error_bad_lines=False)
+df_squidcachelog =pd.read_csv('/home/xibalpa/squidcachelog.csv',header=None,error_bad_lines=False)
+df_casperlog =pd.read_csv('/home/xibalpa/casperlog.csv',header=None,error_bad_lines=False)
+df_auth=pd.read_csv('/home/xibalpa/auth.csv',header=None,error_bad_lines=False)
+df_kernlog1 =pd.read_csv('/home/xibalpa/kernlog1.csv',header=None,error_bad_lines=False)
+df_kern =pd.read_csv('/home/xibalpa/kern.csv',header=None,error_bad_lines=False)
+df_debug =pd.read_csv('/home/xibalpa/debug.csv',header=None,error_bad_lines=False)
+df_alternative =pd.read_csv('/home/xibalpa/alternatives.csv',header=None,error_bad_lines=False)
+df_dmesg =pd.read_csv('/home/xibalpa/dmesg.csv',header=None,error_bad_lines=False)
+df_sysloginstaller =pd.read_csv('/home/xibalpa/sysloginstaller.csv',header=None,error_bad_lines=False)
+
 
 
 #Formatage de la date
@@ -90,6 +94,21 @@ df_syslog['message_log']=df_syslog[0]
 df_syslog['source']="syslog"
 df_syslog['date_traitement']=datetime
 df_syslog=df_syslog.drop([0],axis=1)
+
+
+#Traitement sysloginstaller
+
+df_sysloginstaller['raw']=df_syslog[0]
+df_sysloginstaller['date']=df_sysloginstaller[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_sysloginstaller[0]=df_sysloginstaller[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_sysloginstaller['utilisateur']=df_sysloginstaller[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_sysloginstaller[0]=df_sysloginstaller[0].str.replace('^( \S+)\s','')
+df_sysloginstaller['process']=df_sysloginstaller[0].str.extract('^(\S+)\s',expand=False).str.strip()
+df_sysloginstaller[0]=df_sysloginstaller[0].str.replace('^(\S+)\s','')
+df_sysloginstaller['message_log']=df_sysloginstaller[0]
+df_sysloginstaller['source']="syslog"
+df_sysloginstaller['date_traitement']=datetime
+df_sysloginstaller=df_sysloginstaller.drop([0],axis=1)
 
 #Traitement squdcachelog1
 
@@ -198,7 +217,7 @@ df_auth= df_auth.drop([0],axis=1)
 
 #Création du dataframe final
 
-df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg], ignore_index=True)
+df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg,df_sysloginstaller], ignore_index=True)
 
 #formatage date
 df['date'] = df['date'].apply(formatagedate)
