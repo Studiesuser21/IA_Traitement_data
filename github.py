@@ -34,8 +34,6 @@ import datetime
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
-
-
 df_alternative =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\alternatives.csv',header=None,error_bad_lines=False)
 df_dmesg =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\dmesg.csv',header=None,error_bad_lines=False)
 df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
@@ -59,6 +57,16 @@ df_alternative['message_log']=df_alternative[0]
 df_alternative['source']="alternatives"
 df_alternative['date_traitement']=datetime
 
+
+#Formatage de la date
+def formatagedate(date_d):
+    MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
+            "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12"}   
+    liste_date = date_d.split()
+    if len(liste_date)== 3:
+        mois = MOIS.get("%s"%liste_date[0])
+        date_d = "2021"+"/"+str(mois)+"/"+ liste_date[1]+" "+liste_date[2]
+    return(date_d)
 
 
 #Traitement dmesg
@@ -182,3 +190,9 @@ df_auth[0]=df_auth[0].str.replace('^(\S+):\s','')
 df_auth['process']= df_auth['process'].fillna("no process")
 df_auth['message_log']=df_auth[0]
 df_auth= df_auth.drop([0],axis=1)
+
+
+
+
+#formatage date
+df['date'] = df['date'].apply(formatagedate)
