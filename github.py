@@ -14,12 +14,6 @@
 !cat dmseg > /home/xibalpa/dmesg.csv
 !cat installer/syslog > /home/xibalga/sysloginstaller.csv
 
-
-
-
-
-spark-shell --master spark://master:7077
-
     
 #Télécharger pip et pandas
 !apt install pip 
