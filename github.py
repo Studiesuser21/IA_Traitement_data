@@ -31,22 +31,17 @@ spark-shell --master spark://master:7077
 import pandas as pd
 import re
 import datetime
+import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
 
 
 df_alternative =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\alternatives.csv',header=None,error_bad_lines=False)
 df_dmesg =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\dmesg.csv',header=None,error_bad_lines=False)
+df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
+df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
+df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
 
-#Formatage de la date
-def formatagedate(date):
-    MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
-            "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12",}  
-    liste_date = date.split()
-    if len(liste_date)== 3:
-        mois = MOIS.get("%s"%liste_date[0])
-        date = "2021"+"/"+str(mois)+"/"+ liste_date[1]+" "+liste_date[2]
-    return(date)
 
 #Traitement alternative
 
@@ -60,20 +55,62 @@ df_alternative['message_log']=df_alternative[0]
 df_alternative['source']="alternatives"
 df_alternative['date_traitement']=datetime
 
+
+
 #Traitement dmesg
 
 df_dmesg["raw"]=df_dmesg[0]
 df_dmesg["utilisateur"]="no utilisateur"
-df_dmesg["date"]="0000/00/00 00:00:00"
+df_dmesg["date"]="0000 00 00 00:00:00"
 df_dmesg["process"]="no process"
 df_dmesg["message_log"]=df_dmesg[0]
 df_dmesg["source"]="dmesg"
 df_dmesg['date_traitement']=datetime_object
 
+#Traitement syslog
+
+df_syslog['raw']=df_syslog[0]
+df_syslog['date']=df_syslog[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_syslog[0]=df_syslog[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_syslog['utilisateur']=df_syslog[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_syslog[0]=df_syslog[0].str.replace('^( \S+)\s','')
+df_syslog['process']=df_syslog[0].str.extract('^(\S+)\s',expand=False).str.strip()
+df_syslog[0]=df_syslog[0].str.replace('^(\S+)\s','')
+df_syslog['message_log']=df_syslog[0]
+df_syslog['source']="syslog"
+df_syslog['date_traitement']=datetime
+df_syslog.drop([0],axis=1)
+
+#Traitement squdcachelog1
+
+df_squidcachelog1['raw']=df_squidcachelog1[0]
+df_squidcachelog1['date']=df_squidcachelog1[0].str.extract(r'([0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_squidcachelog1[0]=df_squidcachelog1[0].str.replace(r'([0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9])','')
+df_squidcachelog1['utilisateur']="no utilisateur"
+df_squidcachelog1['process']=df_squidcachelog1[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_squidcachelog1[0]=df_squidcachelog1[0].str.replace('^( \S+)\s','')
+df_squidcachelog1['process']=df_squidcachelog1['process'].replace(np.nan,"no process")
+df_squidcachelog1['date']=df_squidcachelog1['date'].replace(np.nan,"0000/00/00 00:00:00")
+df_squidcachelog1['message_log']=df_squidcachelog1[0]
+df_squidcachelog1['source']="squidcachelog1"
+df_squidcachelog1['date_traitement']=datetime
+df_squidcachelog1.drop([0],axis=1)
+
+#Traitement squidcachelog
+
+df_squidcachelog['raw']=df_squidcachelog[0]
+df_squidcachelog['date']=df_squidcachelog[0].str.extract(r'([0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_squidcachelog[0]=df_squidcachelog[0].str.replace(r'([0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9])','')
+df_squidcachelog['utilisateur']="no utilisateur"
+df_squidcachelog['process']=df_squidcachelog[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_squidcachelog[0]=df_squidcachelog[0].str.replace('^( \S+)\s','')
+df_squidcachelog['process']=df_squidcachelog['process'].replace(np.nan,"no process")
+df_squidcachelog['message_log']=df_squidcachelog[0]
+df_squidcachelog['source']="squidcache"
+df_squidcachelog['date_traitement']=datetime
+df_squidcachelog.drop([0],axis=1)
+
+#Traitement kernlog1
 
 
 
-
-
-
-df['date'] = df['date'].apply(formatagedate) # pour formater les dates sur le dataframe final.
