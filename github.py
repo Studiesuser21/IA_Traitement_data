@@ -41,8 +41,10 @@ df_dmesg =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\dmesg.csv',header=None,er
 df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
 df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
 df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
-df_casperlog =pd.read_csv(r'casperlog.csv',header=None,error_bad_lines=False)
-df_auth=pd.read_csv(r'auth.csv',header=None,error_bad_lines=False)
+df_kernlog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kernlog1.csv',header=None,error_bad_lines=False)
+df_kern =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kern.csv',header=None,error_bad_lines=False)
+df_debug =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\debug.csv',header=None,error_bad_lines=False)
+
 
 #Traitement alternative
 
@@ -67,7 +69,6 @@ df_dmesg["process"]="no process"
 df_dmesg["message_log"]=df_dmesg[0]
 df_dmesg["source"]="dmesg"
 df_dmesg['date_traitement']=datetime_object
-del df_dmesg[1]
 
 #Traitement syslog
 
@@ -114,35 +115,38 @@ df_squidcachelog.drop([0],axis=1)
 
 #Traitement kernlog1
 
-#Traitement casperlog
+df_kernlog1['raw']=df_kernlog1[0]
+df_kernlog1['date']=df_kernlog1[0].str.extract(r'([A-Z][a-z][a-z]  [0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_kernlog1[0]=df_kernlog1[0].str.replace(r'([A-Z][a-z][a-z]  [0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_kernlog1['utilisateur']=df_kernlog1[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_kernlog1[0]=df_kernlog1[0].str.replace('^( \S+)\s','')
+df_kernlog1['process']=df_kernlog1[0].str.extract('^(\S+)\s',expand=False).str.strip()
+df_kernlog1[0]=df_kernlog1[0].str.replace('^(\S+)\s','')
+df_kernlog1['message_log']=df_kernlog1[0]
+df_kernlog1['source']="kernlog1"
+df_kernlog1['date_traitement']=datetime
 
-df_casperlog ['raw']=df_casperlog [0]
-df_casperlog ['date']=df_casperlog [0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
-df_casperlog[0]=df_casperlog[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
-df_casperlog ['date']= df_casperlog ['date'].fillna("0000/00/00 00:00:00")
-df_casperlog ['utilisateur']=df_casperlog [0].str.extract('^( \S+):\s',expand=False).str.strip()
-df_casperlog [0]=df_casperlog [0].str.replace('^( \S+):\s','')
-df_casperlog ['utilisateur']= "no utilisateur"
-df_casperlog ['process']=df_casperlog [0].str.extract('^(\S+):\s',expand=False).str.strip()
-df_casperlog [0]=df_casperlog [0].str.replace('^(\S+):\s','')
-df_casperlog ['process']= df_casperlog ['process'].fillna("no process")
-df_casperlog ['message_log']=df_casperlog [0]
-df_casperlog = df_casperlog .drop([0],axis=1)
+#Traitement kern
 
+df_kern['raw']=df_kern[0]
+df_kern['date']=df_kern[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_kern[0]=df_kern[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_kern['utilisateur']=df_kern[0].str.extract('^( \S+)\s',expand=False).str.strip()
+df_kern[0]=df_kern[0].str.replace('^( \S+)\s','')
+df_kern['process']=df_kern[0].str.extract('^(\S+)\s',expand=False).str.strip()
+df_kern[0]=df_kern[0].str.replace('^(\S+)\s','')
+df_kern['message_log']=df_kern[0]
+df_kern['source']="kern"
+df_kern.drop([0],axis=1)
 
+#Traitement debug
 
-
-
-#Traitement auth
-df_auth['raw']=df_auth[0]
-df_auth['date']=df_auth[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
-df_auth[0]=df_auth[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
-df_auth['date']= df_auth['date'].fillna("0000/00/00 00:00:00")
-df_auth['utilisateur']=df_auth[0].str.extract('^( \S+)\s',expand=False).str.strip()
-df_auth['utilisateur']= df_auth['utilisateur'].fillna("no utilisateur")
-df_auth[0]=df_auth[0].str.replace('^( \S+):\s','')
-df_auth['process']=df_auth [0].str.extract('^(\S+)\s',expand=False).str.strip()
-df_auth[0]=df_auth[0].str.replace('^(\S+):\s','')
-df_auth['process']= df_auth['process'].fillna("no process")
-df_auth['message_log']=df_auth[0]
-df_auth= df_auth.drop([0],axis=1)
+df_debug['raw']=df_debug[0]
+df_debug['date']="0000/00/00 00:00:00"
+df_debug['utilisateur']="no utilisateur"
+df_debug['process']=df_debug[0].str.extract(r'(\W[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z]\W[0-9][0-9][0-9][0-9]\W\W)',expand=False).str.strip()
+df_debug[0]=df_debug[0].str.replace(r'(\W[a-z][a-z][a-z][a-z][a-z][a-z][a-z][a-z]\W[0-9][0-9][0-9][0-9]\W\W)','')
+df_debug['process']=df_debug['process'].replace(np.nan,"no process")
+df_debug['message_log']=df_debug[0]
+df_debug['source']="debug"
+df_debug.drop([0],axis=1)
