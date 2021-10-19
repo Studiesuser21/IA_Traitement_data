@@ -1,27 +1,21 @@
-#!/usr/bin/expect
-!cd /var/log
-!sudo cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
-!expect "password for xibalpa:"
-!send "$F0unt4!n\r"
-!cat cache.log > /home/xibalpa/squidcachelog.csv
-!cat kern.log.1 > /home/xibalpa/kernlog1.csv
-!cat syslog > /home/xibalpa/sysloginstaller.csv
-!cat debug > /home/xibalpa/debug.csv
-!cat casper.log > /home/xibalpa/casperlog.csv
-!cat alternatives.log > /home/xibalpa/alternatives.csv
-!cat auth.log > /home/xibalpa/auth.csv
-!cat kern.log > /home/xibalpa/kern.csv
-!cat dmseg > /home/xibalpa/dmesg.csv
-!cat installer/syslog > /home/xibalga/sysloginstaller.csv
-
-    
+# -*- coding: UTF-8 -*-
+print('seeee')
+from elasticsearch import helpers, Elasticsearch
+import csv
+import os
+command = os.popen('ls -a')
+print(command.read())
+print(command.close())
+L=["sudo cat /var/log/squid/cache.log.1 > /home/xibalpa/squidcachelog1.csv","sudo cat /var/log/squid/cache.log > /home/xibalpa/squidcachelog.csv","cat /var/log/kern.log.1 > /home/xibalpa/kernlog1.csv","sudo cat>
+for i in L:
+        command = os.popen(i)
+        print(command.read())
+        print(command.close())
+ 
 #Télécharger pip et pandas
-!apt install pip 
-!pip install pandas
 
-#Créer fichier dataframe
 import pandas as pd
-import re
+
 import datetime
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
@@ -37,6 +31,7 @@ df_debug =pd.read_csv('/home/xibalpa/debug.csv',header=None,error_bad_lines=Fals
 df_alternative =pd.read_csv('/home/xibalpa/alternatives.csv',header=None,error_bad_lines=False)
 df_dmesg =pd.read_csv('/home/xibalpa/dmesg.csv',header=None,error_bad_lines=False)
 df_sysloginstaller =pd.read_csv('/home/xibalpa/sysloginstaller.csv',header=None,error_bad_lines=False)
+
 
 #Niveau du log
 def defi_level(message):
