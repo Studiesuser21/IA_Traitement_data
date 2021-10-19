@@ -1,18 +1,11 @@
-
-!cat system.journal  > /home/xibalpa/systemjournal.csv
-!cat  > /home/xibalpa/vsftpd2.csv
-!cat vsftpd.log.1 > /home/xibalpa/vsftpd1.csv
 !cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
 !cat cache.log > /home/xibalpa/squidcachelog.csv
 !cat kern.log.1 > /home/xibalpa/kernlog1.csv
 !cat syslog > /home/xibalpa/sysloginstaller.csv
 !cat debug > /home/xibalpa/debug.csv
 !cat casper.log > /home/xibalpa/casperlog.csv
-!cat access_log > /home/xibalpa/cupsaccesslog.csv
-!cat auth.log.1 > /home/xibalpa/authlog1.csv
 !cat alternatives.log > /home/xibalpa/alternatives.csv
 !cat auth.log > /home/xibalpa/auth.csv
-!cat access.log.1 > /home/xibalpa/accesslog1.csv
 !cat kern.log > /home/xibalpa/kern.csv
 !cat dmesg > /home/xibalpa/dmesg.csv
 
@@ -33,17 +26,6 @@ import re
 import datetime
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
-
-df_alternative =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\alternatives.csv',header=None,error_bad_lines=False)
-df_dmesg =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\dmesg.csv',header=None,error_bad_lines=False)
-df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
-df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
-df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
-df_kernlog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kernlog1.csv',header=None,error_bad_lines=False)
-df_kern =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kern.csv',header=None,error_bad_lines=False)
-df_debug =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\debug.csv',header=None,error_bad_lines=False)
-df_casperlog =pd.read_csv(r'casperlog.csv',header=None,error_bad_lines=False)
-df_auth=pd.read_csv(r'auth.csv',header=None,error_bad_lines=False)
 
 
 #Formatage de la date
