@@ -1,4 +1,6 @@
 !cd /var/log
+!sudo
+!F0ut4!n
 !cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
 !cat cache.log > /home/xibalpa/squidcachelog.csv
 !cat kern.log.1 > /home/xibalpa/kernlog1.csv
@@ -222,6 +224,8 @@ df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_sq
 #formatage date
 df['date'] = df['date'].apply(formatagedate)
 
+#Mise en format csv
+df.to_csv('dataframe_multilog.csv',index=False)
 
 
 
