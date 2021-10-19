@@ -90,7 +90,7 @@ df_alternative=df_alternative.drop([0],axis=1)
 
 df_dmesg["raw"]=df_dmesg[0]
 df_dmesg["utilisateur"]="no utilisateur"
-df_dmesg["date"]="0000 00 00 00:00:00"
+df_dmesg["date"]="0000/00/00 00:00:00"
 df_dmesg["process"]="no process"
 df_dmesg["message_log"]=df_dmesg[0]
 df_dmesg["source"]="dmesg"
