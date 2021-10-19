@@ -38,6 +38,32 @@ df_alternative =pd.read_csv('/home/xibalpa/alternatives.csv',header=None,error_b
 df_dmesg =pd.read_csv('/home/xibalpa/dmesg.csv',header=None,error_bad_lines=False)
 df_sysloginstaller =pd.read_csv('/home/xibalpa/sysloginstaller.csv',header=None,error_bad_lines=False)
 
+#Niveau du log
+def defi_level(message):
+    z = re.findall(r'[C,c][R,r][I,i][T,t][I,i][C,c]\w+',message)
+    if len(z)==0:
+        z = re.findall(r'[C,c][R,r][I,i][T,t][I,i][C,c]',message)
+    if len(z)==0:
+        z = re.findall(r'[I,i][N,n][F,f][O,o]\w+',message)
+    if len(z)==0:
+        z = re.findall(r'[W,w][A,a]R,r][N,n]\w+',message)
+    if len(z)==0:
+        z = re.findall(r'[F,f][A,a][T,t][A,a][L,l]\w+',message)
+    if len(z)==0:
+        z = re.findall(r'[E,e][R,r][R,r]\w+',message)    
+    if len(z)==0:
+        z = re.findall(r'[I,i][N,n][F,f][O,o]',message)
+    if len(z)==0:
+        z = re.findall(r'[W,w][A,a]R,r][N,n]',message)
+    if len(z)==0:
+        z = re.findall(r'[F,f][A,a][T,t][A,a][L,l]',message)
+    if len(z)==0:
+        z = re.findall(r'[E,e][R,r][R,r]',message)
+    if len(z)!=0:
+        level = z[0]
+    if len(z)==0:
+        level = "trace"
+    return(level)
 
 
 #Formatage de la date
@@ -218,6 +244,7 @@ df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_sq
 
 #formatage date
 df['date'] = df['date'].apply(formatagedate)
+df['level']=df['raw'].apply(defi_level)
 
 #Mise en format csv
 df.to_csv('dataframe_multilog.csv',index=False)
