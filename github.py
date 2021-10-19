@@ -27,6 +27,17 @@ import datetime
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
+df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
+df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
+df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
+df_casperlog =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\casperlog.csv',header=None,error_bad_lines=False)
+df_auth=pd.read_csv(r'C:\Users\natha\Documents\projet_Log\auth.csv',header=None,error_bad_lines=False)
+df_kernlog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kernlog1.csv',header=None,error_bad_lines=False)
+df_kern =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\kern.csv',header=None,error_bad_lines=False)
+df_debug =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\debug.csv',header=None,error_bad_lines=False)
+df_alternative =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\alternatives.csv',header=None,error_bad_lines=False)
+df_dmesg =pd.read_csv(r'C:\Users\natha\Documents\projet_Log\dmesg.csv',header=None,error_bad_lines=False)
+
 
 #Formatage de la date
 def formatagedate(date_d):
@@ -49,6 +60,8 @@ df_alternative['process']="no process"
 df_alternative['message_log']=df_alternative[0]
 df_alternative['source']="alternatives"
 df_alternative['date_traitement']=datetime
+df_alternative=df_alternative.drop([0],axis=1)
+
 
 
 #Traitement dmesg
@@ -59,7 +72,10 @@ df_dmesg["date"]="0000 00 00 00:00:00"
 df_dmesg["process"]="no process"
 df_dmesg["message_log"]=df_dmesg[0]
 df_dmesg["source"]="dmesg"
-df_dmesg['date_traitement']=datetime_object
+df_dmesg['date_traitement']=datetime
+df_dmesg=df_dmesg.drop([0],axis=1)
+del df_dmesg[1]
+
 
 #Traitement syslog
 
@@ -73,7 +89,7 @@ df_syslog[0]=df_syslog[0].str.replace('^(\S+)\s','')
 df_syslog['message_log']=df_syslog[0]
 df_syslog['source']="syslog"
 df_syslog['date_traitement']=datetime
-df_syslog.drop([0],axis=1)
+df_syslog=df_syslog.drop([0],axis=1)
 
 #Traitement squdcachelog1
 
@@ -88,7 +104,7 @@ df_squidcachelog1['date']=df_squidcachelog1['date'].replace(np.nan,"0000/00/00 0
 df_squidcachelog1['message_log']=df_squidcachelog1[0]
 df_squidcachelog1['source']="squidcachelog1"
 df_squidcachelog1['date_traitement']=datetime
-df_squidcachelog1.drop([0],axis=1)
+df_squidcachelog1=df_squidcachelog1.drop([0],axis=1)
 
 #Traitement squidcachelog
 
@@ -102,7 +118,7 @@ df_squidcachelog['process']=df_squidcachelog['process'].replace(np.nan,"no proce
 df_squidcachelog['message_log']=df_squidcachelog[0]
 df_squidcachelog['source']="squidcache"
 df_squidcachelog['date_traitement']=datetime
-df_squidcachelog.drop([0],axis=1)
+df_squidcachelog=df_squidcachelog.drop([0],axis=1)
 
 #Traitement kernlog1
 
@@ -116,6 +132,7 @@ df_kernlog1[0]=df_kernlog1[0].str.replace('^(\S+)\s','')
 df_kernlog1['message_log']=df_kernlog1[0]
 df_kernlog1['source']="kernlog1"
 df_kernlog1['date_traitement']=datetime
+df_kernlog1=df_kernlog1.drop([0],axis=1)
 
 #Traitement kern
 
@@ -129,7 +146,7 @@ df_kern[0]=df_kern[0].str.replace('^(\S+)\s','')
 df_kern['message_log']=df_kern[0]
 df_kern['source']="kern"
 df_kern['date_traitement']=datetime
-df_kern.drop([0],axis=1)
+df_kern=df_kern.drop([0],axis=1)
 
 #Traitement debug
 
@@ -142,7 +159,7 @@ df_debug['process']=df_debug['process'].replace(np.nan,"no process")
 df_debug['message_log']=df_debug[0]
 df_debug['source']="debug"
 df_debug['date_traitement']=datetime
-df_debug.drop([0],axis=1)
+df_debug=df_debug.drop([0],axis=1)
 
 
 #Traitement casperlog
@@ -160,7 +177,7 @@ df_casperlog ['process']= df_casperlog ['process'].fillna("no process")
 df_casperlog ['message_log']=df_casperlog [0]
 df_casperlog['source']="casperlog"
 df_casperlog['date_traitement']=datetime
-df_casperlog = df_casperlog .drop([0],axis=1)
+df_casperlog = df_casperlog.drop([0],axis=1)
 
 #Traitement auth
 
@@ -181,9 +198,12 @@ df_auth= df_auth.drop([0],axis=1)
 
 #Création du dataframe final
 
-df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg,df_alternative], ignore_index=True)
+df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg], ignore_index=True)
 
 #formatage date
 df['date'] = df['date'].apply(formatagedate)
+
+
+
 
 
