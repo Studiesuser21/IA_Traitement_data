@@ -41,7 +41,7 @@ df_dmesg =pd.read_csv(r'C:\Users\axelg\Downloads\youpi\dmesg.csv',header=None,er
 df_syslog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\syslog.csv',header=None,error_bad_lines=False)
 df_squidcachelog1 =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog1.csv',header=None,error_bad_lines=False)
 df_squidcachelog =pd.read_csv(r'C:\Users\natha\Documents\Projet_log\squidcachelog.csv',header=None,error_bad_lines=False)
-
+df_casperlog =pd.read_csv(r'casperlog.csv',header=None,error_bad_lines=False)
 
 #Traitement alternative
 
@@ -113,5 +113,17 @@ df_squidcachelog.drop([0],axis=1)
 
 #Traitement kernlog1
 
+#Traitement casperlog
 
-
+df_casperlog ['raw']=df_casperlog [0]
+df_casperlog ['date']=df_casperlog [0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df[0]=df[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_casperlog ['date']= df_casperlog ['date'].fillna("0000/00/00 00:00:00")
+df_casperlog ['utilisateur']=df_casperlog [0].str.extract('^( \S+):\s',expand=False).str.strip()
+df_casperlog [0]=df_casperlog [0].str.replace('^( \S+):\s','')
+df_casperlog ['utilisateur']= "no utilisateur"
+df_casperlog ['process']=df_casperlog [0].str.extract('^(\S+):\s',expand=False).str.strip()
+df_casperlog [0]=df_casperlog [0].str.replace('^(\S+):\s','')
+df_casperlog ['process']= df_casperlog ['process'].fillna("no process")
+df_casperlog ['message_log']=df_casperlog [0]
+df_casperlog = df_casperlog .drop([0],axis=1)
