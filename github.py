@@ -1,7 +1,8 @@
+#!/usr/bin/expect
 !cd /var/log
-!sudo
-!F0ut4!n
-!cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
+!sudo cat cache.log.1 > /home/xibalpa/squidcachelog1.csv
+!expect "password for xibalpa:"
+!send "$F0unt4!n\r"
 !cat cache.log > /home/xibalpa/squidcachelog.csv
 !cat kern.log.1 > /home/xibalpa/kernlog1.csv
 !cat syslog > /home/xibalpa/sysloginstaller.csv
