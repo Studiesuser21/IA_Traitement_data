@@ -95,7 +95,7 @@ df_syslog=df_syslog.drop([0],axis=1)
 
 #Traitement sysloginstaller
 
-df_sysloginstaller['raw']=df_syslog[0]
+df_sysloginstaller['raw']=df_sysloginstaller[0]
 df_sysloginstaller['date']=df_sysloginstaller[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
 df_sysloginstaller[0]=df_sysloginstaller[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
 df_sysloginstaller['utilisateur']=df_sysloginstaller[0].str.extract('^( \S+)\s',expand=False).str.strip()
