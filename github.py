@@ -31,6 +31,8 @@ df_debug =pd.read_csv('/home/xibalpa/debug.csv',header=None,error_bad_lines=Fals
 df_alternative =pd.read_csv('/home/xibalpa/alternatives.csv',header=None,error_bad_lines=False)
 df_dmesg =pd.read_csv('/home/xibalpa/dmesg.csv',header=None,error_bad_lines=False)
 df_sysloginstaller =pd.read_csv('/home/xibalpa/sysloginstaller.csv',header=None,error_bad_lines=False)
+df_vsftpdf =pd.read_csv('/home/xibalpa/vsftpd.csv',header=None,error_bad_lines=False)
+
 
 
 #Niveau du log
@@ -232,6 +234,21 @@ df_auth['message_log']=df_auth[0]
 df_auth['source']="auth"
 df_auth['date_traitement']=datetime
 df_auth= df_auth.drop([0],axis=1)
+   
+#Traitement vsftpdf
+   
+df_vsftpdf['raw']=df_vsftpdf[0]
+df_vsftpdf['date']=df_vsftpdf[0].str.extract(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])',expand=False).str.strip()
+df_vsftpdf[0]=df_vsftpdf[0].str.replace(r'([A-Z][a-z][a-z] [0-2][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])','')
+df_vsftpdf['utilisateur']="unknown"
+df_vsftpdf[0]=df_vsftpdf[0].str.replace(r'([A-Z][a-z][a-z] )','')
+df_vsftpdf[0]=df_vsftpdf[0].str.replace(r'([0-9][0-9][0-9][0-9] )','')
+df_vsftpdf['process']=df_vsftpdf[0].str.extract(r'(\[[a-z][a-z][a-z] [0-9][0-9][0-9][0-9][0-9]])',expand=False).str.strip()
+df_vsftpdf[0]=df_vsftpdf[0].str.replace(r'\[[a-z][a-z][a-z] [0-9][0-9][0-9][0-9][0-9]]','')
+df_vsftpdf['message_log']=df_vsftpdf[0]
+df_vsftpdf['source']="vsftpdf"
+df_vsftpdf['date_traitement']=datetime
+df_vsftpdf=df_vsftpdf.drop([0],axis=1)
 
 #Création du dataframe final
 
