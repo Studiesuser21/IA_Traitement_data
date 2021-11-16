@@ -32,6 +32,8 @@ df_alternative =pd.read_csv('/home/xibalpa/alternatives.csv',header=None,error_b
 df_dmesg =pd.read_csv('/home/xibalpa/dmesg.csv',header=None,error_bad_lines=False)
 df_sysloginstaller =pd.read_csv('/home/xibalpa/sysloginstaller.csv',header=None,error_bad_lines=False)
 df_vsftpdf =pd.read_csv('/home/xibalpa/vsftpd.csv',header=None,error_bad_lines=False)
+df_accesslog =pd.read_csv('/home/xibalpa/accesslog.csv',header=None,error_bad_lines=False)
+
 
 
 
@@ -250,6 +252,33 @@ df_vsftpdf['source']="vsftpdf"
 df_vsftpdf['date_traitement']=datetime
 df_vsftpdf=df_vsftpdf.drop([0],axis=1)
 
+#Traitement accesslog
+   
+   
+df_accesslog['raw']=df_accesslog[0]
+df_accesslog['ip']=df_accesslog['raw'].str.extract(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b',expand=False).str.strip()
+def datepouraccesslog(liste):
+    testz= re.findall(r"[0-3][0-9]/[A-Z][a-z][a-z]/[0-2][0-9][0-2][0-9]:[0-2][0-9]:[0-5][0-9]:[0-9][0-9]",liste)
+    testlist = testz[0].split("/")
+    testlistb = testlist[2].split(":")
+    testlist = testlist[:2] + testlistb
+    
+    MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
+            "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12"}   
+    mois = MOIS.get("%s"%testlist[1])
+    datefinal = testlist[2] +"/"+ str(mois)+"/"+ testlist[0]+" "+":".join(testlistb[1:])
+    return(datefinal)
+df_accesslog['date'] = df_accesslog['raw'].apply(datepouraccesslog)
+df_accesslog['raw']=df_accesslog[0]
+df_accesslog['process']="no process"
+df_accesslog["utilisateur"]="no utilisateur"
+df_accesslog['message_log']=df_accesslog[0]
+df_accesslog['source']="accesslog"
+df_accesslog['date_traitement']=datetime
+df_accesslog=df_accesslog.drop([0],axis=1)
+
+   
+   
 #Création du dataframe final
 
 df=pd.concat([df_kern, df_debug,df_syslog,df_auth,df_casperlog,df_kernlog1,df_squidcachelog,df_squidcachelog1,df_dmesg,df_sysloginstaller], ignore_index=True)
