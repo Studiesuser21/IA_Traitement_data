@@ -46,7 +46,8 @@ print('dfkern=',len(df_kern.index))
 print('dfsquidcache=',len(df_squidcachelog.index))
 
 
-#Niveau du log, regex permettant de chercher la criticité du log, si le log contien critic, info, warn, warning, err, error
+#Niveau du log, regex permettant de chercher la criticité du log, si le log contient critic, info, warn, warning, err, error
+#Si un des logs contient un de ces mots il est ajouté à la colonne level
 def defi_level(message):
     z = re.findall(r'[C,c][R,r][I,i][T,t][I,i][C,c]\w+',message)
     a = 0
@@ -77,7 +78,7 @@ def defi_level(message):
         level = "trace"
     return(level)
 
-#Formatage de la date pour avoir le format date adapté dans ES
+#Formatage de la date pour avoir le format date adapté dans ES et avoir une unicité de format pour la colonne date
 def formatagedate(date_d):
     MOIS = {"Jan" : "01","Feb" : "02","Mar" : "03","Apr" : "04","May" : "05","Jun" : "06",
             "Jul" : "07","Aug" : "08","Sep" : "09","Oct" : "10","Nov" : "11","Dec" : "12"}   
