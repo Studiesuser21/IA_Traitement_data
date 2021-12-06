@@ -366,9 +366,14 @@ df['insert']= df.apply(lambda x: typeattaque("[iI][nN][sS][eE][rR][tT]",x['raw']
 df['update']= df.apply(lambda x: typeattaque("[uU][pP][dD][aA][tT][eE]",x['raw']), axis=1)
 df['password']= df.apply(lambda x: typeattaque("[pP][aA][sS][sS][wW][oO][rR][dD]",x['raw']), axis=1)
 df['ip']=df['raw'].str.extract(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b',expand=False).str.strip()
-df['ip'] = df['ip'].replace('','10.78.120.61')
-df['ip']= df['ip'].fillna("10.78.120.61")
-df['ipp']=(df['ip'].str.contains('10.78.120.61')==False)*1
+#On récupère l'ip local de la machine hôte
+iplocal = os.popen("hostname -I | awk '{print $1}'")
+ipLocalStr = str( iplocal.read)
+#On....
+df['ip'] = df['ip'].replace('',ipLocalStr)
+df['ip']= df['ip'].fillna(ipLocalStr)
+df['ipp']=(df['ip'].str.contains(ipLocalStr)==False)*1
+
 print(df.columns)
 print('dfkernlog1=',len(df_kernlog1.index))
 print('dfmesg=',len(df_dmesg.index))
