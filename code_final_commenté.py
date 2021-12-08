@@ -15,7 +15,6 @@ for i in L:
 	print(command.close())
  
 #Télécharger pip et pandas
-
 import pandas as pd
 
 import datetime
@@ -352,20 +351,16 @@ df['level']=df['raw'].apply(defi_level)
 df[df['date'].astype(str).str.match(r'([0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9] [0-2][0-9]:[0-5][0-9]:[0-9][0-9])')]
 #On essaie de récupérer pour chaque log du dataframe concaténé des messages logs qui sont suceptibles d'être une attaque
 #Cela nous sera utile pour la classification des attaques
-df['sql']= df.apply(lambda x: typeattaque("[sS][qQ][Ll]",x['raw']), axis=1)
+
+df['sql']= df.apply(lambda x: typeattaque("[sS][qQ][Ll]|[uU][nN][iI][Oo][nN]|[sS][eE][lL][eE][cC][tT]|[dD][rR][oO][pP]|[cC][oO][uU][nN][tT]|[iI][nN][sS][eE][rR][tT]|[uU][pP][dD][aA][tT][eE]",x['raw']), axis=1)
 df['nmap']= df.apply(lambda x: typeattaque("[nN][mM][aA][pP]",x['raw']), axis=1)
 df['ssh']= df.apply(lambda x: typeattaque("[sS][sS][hH]",x['raw']), axis=1)
 df['ftp']= df.apply(lambda x: typeattaque("[fF][tT][pP]",x['raw']), axis=1)
 df['http']= df.apply(lambda x: typeattaque("[hH][tT][tT][pP]",x['raw']), axis=1)
 df['Nikto']= df.apply(lambda x: typeattaque("[nN][iI][kK][tT][oO]",x['raw']), axis=1)
-df['union']= df.apply(lambda x: typeattaque("[uU][nN][iI][Oo][nN]",x['raw']), axis=1)
-df['select']= df.apply(lambda x: typeattaque("[sS][eE][lL][eE][cC][tT]",x['raw']), axis=1)
-df['drop']= df.apply(lambda x: typeattaque("[dD][rR][oO][pP]",x['raw']), axis=1)
-df['count']= df.apply(lambda x: typeattaque("[cC][oO][uU][nN][tT]",x['raw']), axis=1)
-df['insert']= df.apply(lambda x: typeattaque("[iI][nN][sS][eE][rR][tT]",x['raw']), axis=1)
-df['update']= df.apply(lambda x: typeattaque("[uU][pP][dD][aA][tT][eE]",x['raw']), axis=1)
 df['password']= df.apply(lambda x: typeattaque("[pP][aA][sS][sS][wW][oO][rR][dD]",x['raw']), axis=1)
 df['ip']=df['raw'].str.extract(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b',expand=False).str.strip()
+
 #On récupère l'ip local de la machine hôte
 iplocal = os.popen("hostname -I | awk '{print $1}'")
 ipLocalStr = str( iplocal.read)
@@ -373,6 +368,7 @@ ipLocalStr = str( iplocal.read)
 df['ip'] = df['ip'].replace('',ipLocalStr)
 df['ip']= df['ip'].fillna(ipLocalStr)
 df['ipp']=(df['ip'].str.contains(ipLocalStr)==False)*1
+df = df[ df.date != '2030/12/31 23:58:59']
 
 print(df.columns)
 print('dfkernlog1=',len(df_kernlog1.index))
