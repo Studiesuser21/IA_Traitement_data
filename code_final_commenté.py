@@ -3,6 +3,7 @@ print('seeee')
 from elasticsearch import helpers, Elasticsearch
 import csv
 import re
+import pickle
 import os
 command = os.popen('ls -a')
 print(command.read())
@@ -391,3 +392,57 @@ print('dfkernlog1=',len(df_kernlog1.index))
 print('dfsyslog=',len(df_syslog.index))
 print('dfmesg=',len(df_dmesg.index))
 print('dfconcat=',len(df.index))
+
+# Partie Détection / Machine Learning
+
+print(df.shape)
+df['date'] =  pd.to_datetime(df['date'])
+print(df.shape)
+df.set_index('date',inplace=True)             # ligne à enlever si pas de compact
+df=df.resample('2s').mean()               # ligne à enlever si pas de compact
+
+df = df[df['ssh'].notna()&df["nmap"].notna()&df["Nikto"].notna()&df["ftp"].notna()&df["ipp"].notna()&df["sql"].notna()&df["ftp"].notna()&df["password"].notna()]
+for col in df:
+    df.loc[df[col]!=0.0,col]=1
+    df[col] = df[col].apply(np.int64)  
+print(df.shape)
+
+
+
+
+# load le fichier pkl contenant les paramètres de notre modèle qu'on doit mettre dans le meme repertoire que 
+with open('RandForest_model_IA_Logs.pkl', 'rb') as f:
+    RandFor = pickle.load(f)
+
+
+# On transforme certaines features en type categories pour que le modèle les comprenne correctement
+for col in ['ssh',"nmap","Nikto","ftp","ipp","sql","http","password"]:
+    df[col] = df[col].astype('category',copy=False)      
+    
+    
+#df = df.drop("Somme_patterns",axis=1)
+print(df.columns)
+df['Result'] = RandFor.predict(df)		#on effectue la prédiction et on la met dans une colonne Result
+
+dico =  df['Result'].value_counts().to_dict()
+print("Stats de la détection :")				# Viz des tentives d'attaques
+for k in dico:
+    print("\t on a détecté ",dico.get(k),"logs avec le label", k )
+
+def message_rapport(code):					
+	Message = {"RAS" : "Aucune tentative d'intrusion n'a été détecté.",
+	"SSH":"On a détecté une tentative de connexion ssh. On est au début d'une attaque.",
+	"SP": "On a détecté un nmap et une adresse IP différente. On est sur un scan de port donc au début d'attaque.",
+	"SVM": "On a détecté un scan de vulnérabilité Nikto. On est au milieu de l'attaque.",
+	"SPM":"On a détecté une tentative d\'attaque avec un scan de port. On est au milieu de l'attaque.",
+	"ASM": "On a détecté une tentative d\'attaque de serveur ftp. On est au stade avancé de l'attaque.",
+	"SQLA":  "On a détecté une tentative d\'injection SQL. On est au stade avancé de l'attaque.",
+	"EC": "On a détecté de trop nombreuses d'intrusions. On est sur un état critique de votre pc. Eteignez-TOUT.",
+	"IPD":  "On a détecté une IP différente dans les logs "}
+	code = str(code)
+	return(Message.get("%s"%code)) 
+df['group'] = df['Result'].ne(df['Result'].shift()).cumsum()
+df.drop_duplicates(subset=['group'])
+print("Rapport détaillé des logs soumis à l'analyse : \n ")		# Détail des tentatives d'intrusion
+for i in range(1,df.group.max()+1):
+    print("  À",df.loc[df["group"]  == i].index[0],":\t",message_rapport(df.loc[df["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(df.loc[df["group"]  == i].ipp[0])) )
