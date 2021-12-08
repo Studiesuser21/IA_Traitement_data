@@ -393,7 +393,13 @@ print('dfsyslog=',len(df_syslog.index))
 print('dfmesg=',len(df_dmesg.index))
 print('dfconcat=',len(df.index))
 
-# Partie Détection / Machine Learning
+
+
+
+############ Partie Détection / Machine Learning  ########
+
+
+#dernier cleaning des datas avant passage dans le modèle
 
 print(df.shape)
 df['date'] =  pd.to_datetime(df['date'])
@@ -410,7 +416,7 @@ print(df.shape)
 
 
 
-# load le fichier pkl contenant les paramètres de notre modèle qu'on doit mettre dans le meme repertoire que 
+# load le fichier pkl contenant les paramètres de notre modèle (fichier à mettre dans le meme repertoire que le script)
 with open('RandForest_model_IA_Logs.pkl', 'rb') as f:
     RandFor = pickle.load(f)
 
@@ -419,10 +425,9 @@ with open('RandForest_model_IA_Logs.pkl', 'rb') as f:
 for col in ['ssh',"nmap","Nikto","ftp","ipp","sql","http","password"]:
     df[col] = df[col].astype('category',copy=False)      
     
-    
-#df = df.drop("Somme_patterns",axis=1)
+
 print(df.columns)
-df['Result'] = RandFor.predict(df)		#on effectue la prédiction et on la met dans une colonne Result
+df['Result'] = RandFor.predict(df)		#on effectue les prédictions et on les met dans une colonne Result
 
 dico =  df['Result'].value_counts().to_dict()
 print("Stats de la détection :")				# Viz des tentives d'attaques
