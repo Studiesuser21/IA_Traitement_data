@@ -38,6 +38,6 @@ La légende correspondant au sigle choisi pour les classes est explicité ci-des
   - "ASM": "On a détecté une tentative d'attaque de serveur ftp. On est au stade avancé de l'attaque."
   - "EC": "On a détecté de trop nombreuses de tentatives d'intrusions. On est sur un état critique de votre pc, consulter un spécialiste."
     
-Pour le rapport d'intrusion, l'utilisateur précise le nombre de mois / de jour / ou de minutes qu'il désire afficher. Ainsi s'il rentre "Minute" au premier input puis "5" au deuxième input, il aura les résultats de la détection d'intrusion sur les logs des 5 dernières minutes.
+Pour le rapport d'intrusion, l'utilisateur précise le nombre de jours / d'heures / ou de minutes qu'il désire afficher. Ainsi s'il rentre "Minute" au premier input puis "5" au deuxième input, il aura les résultats de la détection d'intrusion sur les logs des 5 dernières minutes.
    
 Groupe composé de GAMER Axel, HADDOUNE Mohamed-Salah et LE ROUX Nathan
