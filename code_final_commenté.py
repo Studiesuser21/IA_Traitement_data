@@ -20,7 +20,7 @@ import pandas as pd
 
 from datetime import datetime, timedelta
 import numpy as np
-datetime = datetime.datetime.now().replace(microsecond=0)
+datetime = datetime.now().replace(microsecond=0)
 
 #Les différents dataframes de tous les logs transformés en csv
 #On utilise les try except pour gérer les dataframes vide, du aux logs vides
@@ -548,7 +548,7 @@ dfsortie['group'] = dfsortie['Result'].ne(dfsortie['Result'].shift()).cumsum()
 dfsortie.drop_duplicates(subset="group",inplace=True)
 
 print(" Souhaitez vous un rapport détaillé de ce qui s'est passé?")
-Response=input("Oui ou Non")
+Response=input("Oui ou Non : ")
 
 if Response=="Oui":
     for i in range(1,dfsortie.group.max()+1):
