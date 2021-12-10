@@ -549,6 +549,6 @@ Response=input("Oui ou Non : ")
 
 if Response=="Oui":
     for i in range(1,dfsortie.group.max()+1):
-        print("  À",dfsortie.loc[dfsortie["group"]  == i].index[0],":\t",message_rapport(dfsortie.loc[dfsortie["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(dfsortie.loc[dfsortie["group"]  == i].ipp[0])),("\n \t\t\t\t On a détecté de nombreuses et différentes de tentatives d'intrusions. On est sur un état critique de votre pc, consulter un spécialiste." *(df.loc[df["group"]  == i].critique[0])) )
+       print("  À",dfsortie.loc[dfsortie["group"]  == i].index[0],":\t",message_rapport(dfsortie.loc[dfsortie["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(dfsortie.loc[dfsortie["group"]  == i].ipp[0])) )
 else:
     print("Votre rapport est fini")
