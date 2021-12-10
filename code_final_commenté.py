@@ -18,7 +18,7 @@ for i in L:
 #Télécharger pip et pandas
 import pandas as pd
 
-import datetime
+from datetime import datetime, timedelta
 import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
