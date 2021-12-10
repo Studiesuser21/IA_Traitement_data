@@ -1,13 +1,13 @@
 # -*- coding: UTF-8 -*-
-print('seeee')
+import warnings
+#On bloque tout les warning de python qui pourrait s'afficher
+warnings.filterwarnings("ignore")
 from elasticsearch import helpers, Elasticsearch
 import csv
 import re
 import pickle
 import os
-command = os.popen('ls -a')
-print(command.read())
-print(command.close())
+
 #Permet de récupérer les logs et dans les sauvegarder en fichier csv et aussi d'installer les bibliothèques pythons nécessaires
 L=["sudo cat /var/log/vsftpd.log > /home/xibalpa/vsftpd.csv","sudo cat /var/log/apache2/access.log > /home/xibalpa/accesslog.csv","sudo cat /var/log/vsftpd.log > /home/xibalpa/vsftpdlog.csv","sudo cat /var/log/squid/cache.log.1 > /home/xibalpa/squidcachelog1.csv","sudo cat /var/log/squid/cache.log > /home/xibalpa/squidcachelog.csv","cat /var/log/kern.log.1 > /home/xibalpa/kernlog1.csv","sudo cat /var/log/installer/syslog > /home/xibalpa/sysloginstaller.csv","sudo cat /var/log/installer/debug > /home/xibalpa/debug.csv","sudo cat /var/log/installer/casper.log > /home/xibalpa/casperlog.csv","cat /var/log/alternatives.log.1 > /home/xibalpa/alternatives.csv","cat /var/log/auth.log > /home/xibalpa/auth.csv","cat /var/log/kern.log > /home/xibalpa/kern.csv","cat /var/log/dmesg > /home/xibalpa/dmesg.csv","cat /var/log/syslog > /home/xibalpa/syslog.csv","apt install pip","pip install pandas","pip install datetime","pip install numpy"]
 for i in L:
@@ -91,14 +91,6 @@ try:
 	L_dataframe.append(df_accesslog)
 except Exception as e:
 	print(e)	
-
-print('dfkernlog1=',len(df_kernlog1.index))
-print('dfsyslog=',len(df_syslog.index))
-print('dfmesg=',len(df_dmesg.index))
-print('dfdebug=',len(df_debug.index))
-print('dfcasper=',len(df_casperlog.index))
-print('dfkern=',len(df_kern.index))
-print('dfsquidcache=',len(df_squidcachelog.index))
 
 
 #Niveau du log, regex permettant de chercher la criticité du log, si le log contient critic, info, warn, warning, err, error
@@ -441,10 +433,6 @@ df['ip']= df['ip'].fillna(ipLocalStr)
 df['ipp']=(df['ip'].str.contains(ipLocalStr)==False)*1
 df = df[ df.date != '2030/12/31 23:58:59']
 
-print(df.columns)
-print('dfkernlog1=',len(df_kernlog1.index))
-print('dfmesg=',len(df_dmesg.index))
-print('dfconcat=',len(df.index))
 
 #Mise en format csv du dataframe concaténé
 try:
@@ -473,9 +461,7 @@ except Exception as e:
 
 #dernier cleaning des datas avant passage dans le modèle
 
-print(df.shape)
 df['date'] =  pd.to_datetime(df['date'])
-print(df.shape)
 df.set_index('date',inplace=True)             # ligne à enlever si pas de compact
 df=df.resample('2s').mean()               # ligne à enlever si pas de compact
 
