@@ -36,7 +36,7 @@ La légende correspondant au sigle choisi pour les classes est explicité ci-des
   - "SVM":  "On a détecté un scan de vulnérabilité Nikto. On est au début de l'attaque "
   - "SSH" : "On a détecté une tentative de connexion ssh. On est au début/milieu de l'attaque."
   - "ASM": "On a détecté une tentative d'attaque de serveur ftp. On est au stade avancé de l'attaque."
-  - "EC": "On a détecté de trop nombreuses de tentatives d'intrusions. On est sur un état critique de votre pc, consulter un spécialiste."
+  - "EC": "On a détecté de trop nombreuses de tentatives d'intrusions. On est sur un état critique de votre pc, il se peut qu'il ait été compromis"
     
 Pour le rapport d'intrusion, l'utilisateur précise le nombre de jours / d'heures / ou de minutes qu'il désire afficher. Ainsi s'il rentre "Minute" au premier input puis "5" au deuxième input, il aura les résultats de la détection d'intrusion sur les logs des 5 dernières minutes.
    
