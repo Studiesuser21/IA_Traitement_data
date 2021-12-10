@@ -545,6 +545,17 @@ for k in dico:
 
 
 dfsortie['group'] = dfsortie['Result'].ne(dfsortie['Result'].shift()).cumsum()
+
+
+column_names = ['sql','ipp','ftp','Nikto','nmap','password','ssh','http']
+dfsortie['Somme_patterns']= dfsortie[column_names].sum(axis=1)
+dfsortie['Somme_patterns'].fillna(0, inplace=True) 
+dfsortie.loc[(dfsortie['Somme_patterns']>=4),"critique"] = 1
+dfsortie['critique'].fillna(0, inplace=True) 
+
+
+
+
 dfsortie.drop_duplicates(subset="group",inplace=True)
 
 print(" Souhaitez vous un rapport détaillé de ce qui s'est passé?")
@@ -552,6 +563,6 @@ Response=input("Oui ou Non : ")
 
 if Response=="Oui":
     for i in range(1,dfsortie.group.max()+1):
-        print("  À",dfsortie.loc[dfsortie["group"]  == i].index[0],":\t",message_rapport(dfsortie.loc[dfsortie["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(dfsortie.loc[dfsortie["group"]  == i].ipp[0])) )
+        print("  À",dfsortie.loc[dfsortie["group"]  == i].index[0],":\t",message_rapport(dfsortie.loc[dfsortie["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(dfsortie.loc[dfsortie["group"]  == i].ipp[0])),("\n \t\t\t\t On a détecté de nombreuses et différentes de tentatives d'intrusions. On est sur un état critique de votre pc, consulter un spécialiste." *(df.loc[df["group"]  == i].critique[0])) )
 else:
     print("Votre rapport est fini")
