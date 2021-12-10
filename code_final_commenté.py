@@ -437,6 +437,7 @@ ipLocalStr = str( iplocal.read)
 df['ip'] = df['ip'].replace('',ipLocalStr)
 #On gère les none en les remplaçant par l'adresse ip locale de la machine hote dans la colonne ip
 df['ip']= df['ip'].fillna(ipLocalStr)
+#on compare l'ip récupéré et l'ip de notre machine.
 df['ipp']=(df['ip'].str.contains(ipLocalStr)==False)*1
 df = df[ df.date != '2030/12/31 23:58:59']
 
