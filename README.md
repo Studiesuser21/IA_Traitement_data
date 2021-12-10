@@ -6,7 +6,7 @@ Vous trouverez sur répertoire:
 
   -RandForest_model_IA_Logs.pkl: fichier de sauvegarde contenant les paramètres de notre algorithme. Notre algorithme de classification est une Random Forest(forêt aléatoire). 
 
-  -training.py: script de code permettant l'entraînement du modèle de Machine Learning et la génération du fichier de sauvegarde RandForest_model_IA_Logs.pkl. Fichier qu'utilise ensuite notre script code_final.py pour prédire le type d'attaque.
+  -Training_RF_IA_TTT_Log.ipnb: script de code permettant l'entraînement du modèle de Machine Learning et la génération du fichier de sauvegarde RandForest_model_IA_Logs.pkl. Fichier qu'utilise ensuite notre script code_final.py pour prédire le type d'attaque.
 
 
 Pour effectuer une analyse des logs sur n'importe quel pc de la salle Noether de manière automatique de la collecte au résultat de notre algorithme de machine learning de détection d'intrusion, il suffit de lancer code_final.py dans un dossier contenant RandForest_model_IA_Logs.pkl.
