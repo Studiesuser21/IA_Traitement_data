@@ -30,8 +30,8 @@ Les logs analysés sont :
 - var/log/syslog 
 
 La légende correspondant au sigle choisi pour les classes est explicité ci-dessous:
-  - "RAS"    :    "Aucune tentative d'intrusion n'a été détecté "
-  - "IPD"   : On a détecté un nmap et une adresse IP différente. On est sur un scan de port donc au début de l'attaque sur la phase de reconnaissance"
+  - "RAS" :  "Aucune tentative d'intrusion n'a été détecté "
+  - "IPD"   : On a détecté une adresse IP différente."
   - "SQLA":  "On a détecté une tentative d'injection SQL. On est au stade avancé de l'attaque."
   - "SVM":  "On a détecté un scan de vulnérabilité Nikto. On est au début de l'attaque "
   - "SSH" : "On a détecté une tentative de connexion ssh. On est au début/milieu de l'attaque."
