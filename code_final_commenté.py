@@ -501,10 +501,6 @@ for col in ['ssh',"nmap","Nikto","ftp","ipp","sql","http","password"]:
 print(df.columns)
 df['Result'] = RandFor.predict(df)		#on effectue les prédictions et on les met dans une colonne Result
 
-dico =  df['Result'].value_counts().to_dict()
-print("Stats de la détection :")				# Viz des tentives d'attaques
-for k in dico:
-    print("\t on a détecté ",dico.get(k),"logs avec le label", k )
 
 def message_rapport(code):
 	Message = {"RAS" : "Aucune tentative d'intrusion n'a été détecté.",
@@ -518,8 +514,44 @@ def message_rapport(code):
 	"IPD":  "On a détecté une IP différente dans les logs "}
 	code = str(code)
 	return(Message.get("%s"%code))
-df['group'] = df['Result'].ne(df['Result'].shift()).cumsum()
-df.drop_duplicates(subset=['group'])
-print("Rapport détaillé des logs soumis à l'analyse : \n ")		# Détail des tentatives d'intrusion
-for i in range(1,df.group.max()+1):
-    print("  À",df.loc[df["group"]  == i].index[0],":\t",message_rapport(df.loc[df["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(df.loc[df["group"]  == i].ipp[0])) )
+
+
+
+print("Entrez la période sur laquelle vous voulez avoir votre rapport:")    
+Request=input("Vous avez le choix entre Minute, Heure, Jour:")
+
+to_substract=input("Choissez le nombre de "+Request+" que vous souhaitez: ")
+to_substract=int(to_substract)
+
+end_date = datetime.today().strftime("%Y-%m-%d %H:%M:%S") # A Remplacer par date du jour
+
+if Request=="Jour":
+    d = datetime.today() - timedelta(days=to_substract)
+if Request=="Heure":
+    d = datetime.today() - timedelta(hours=to_substract)
+if Request == "Minute":
+    d = datetime.today() - timedelta(minutes=to_substract)
+
+start_date = d.strftime("%Y-%m-%d %H:%M:%S")
+print(start_date)
+mask = (df.index >= start_date) & (df.index <= end_date)
+dfsortie = df.loc[mask]
+dfsortie
+print("Entre ",start_date,"et ",end_date," :")
+dico =  dfsortie['Result'].value_counts().to_dict()
+print("Stats de la détection :")
+for k in dico:
+    print("\t on a détecté ",dico.get(k),"logs avec le label", k )
+
+
+dfsortie['group'] = dfsortie['Result'].ne(dfsortie['Result'].shift()).cumsum()
+dfsortie.drop_duplicates(subset="group",inplace=True)
+
+print(" Souhaitez vous un rapport détaillé de ce qui s'est passé?")
+Response=input("Oui ou Non")
+
+if Response=="Oui":
+    for i in range(1,dfsortie.group.max()+1):
+        print("  À",dfsortie.loc[dfsortie["group"]  == i].index[0],":\t",message_rapport(dfsortie.loc[dfsortie["group"]  == i].Result[0]),("\n \t\t\t\t Une IP différente a été détectée." *(dfsortie.loc[dfsortie["group"]  == i].ipp[0])) )
+else:
+    print("Votre rapport est fini")
