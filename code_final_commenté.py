@@ -23,6 +23,8 @@ import numpy as np
 datetime = datetime.datetime.now().replace(microsecond=0)
 
 #Les différents dataframes de tous les logs transformés en csv
+#On utilise les try except pour gérer les dataframes vide, du aux logs vides
+#Si le dataframe n'est pas vide on l'ajoute à la liste L_dataframe qui sera utilisé pour concaténer les dataframes
 L_dataframe=[]
 try:
 	df_syslog =pd.read_csv('/home/xibalpa/syslog.csv',header=None,error_bad_lines=False)
@@ -150,6 +152,7 @@ def formatagedate(date_d):
 #On traite le log qui sera dans la colonne df_nomDuFichierLog[0], depuis cette colonne on va extraire les différentes données
 #Une fois les données extraites on supprime ces données de la colonne[0] et on passe aux données suivantes à extraire
 #Voici un exemple sur le fichier log Alternative
+#On fait un try except sur tous les traitements 
 
 #On garde une colonne raw ou le log est gardé sous sa forme première
 df_alternative['raw']=df_alternative[0]
@@ -390,16 +393,13 @@ except Exception as e:
 
 #Création du dataframe final
 
+
 #On concaténe tous les dataframes traités en un seul
 
 df=L_dataframe[0]
-try:
-	for i in L_dataframe[1:]:
-		
-		df=pd.concat([df,i], ignore_index=True) #df_kernlog1,
- #df_debugdf_auth,df_casperlog,df_kern,df_squidcachelog,df_squidcachelog1,df_dmesg
-except Exception as e:
-	print(e)
+for i in L_dataframe[1:]:
+
+	df=pd.concat([df,i], ignore_index=True) 
 	
 
 
@@ -433,8 +433,9 @@ df['ip']=df['raw'].str.extract(r'\b(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\b',expan
 #On récupère l'ip local de la machine hôte
 iplocal = os.popen("hostname -I | awk '{print $1}'")
 ipLocalStr = str( iplocal.read)
-#On....
+#On insére l'adresse ip locale de la machine hote dans la colonne ip
 df['ip'] = df['ip'].replace('',ipLocalStr)
+#On gère les none en les remplaçant par l'adresse ip locale de la machine hote dans la colonne ip
 df['ip']= df['ip'].fillna(ipLocalStr)
 df['ipp']=(df['ip'].str.contains(ipLocalStr)==False)*1
 df = df[ df.date != '2030/12/31 23:58:59']
