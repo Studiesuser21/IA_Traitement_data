@@ -29,6 +29,12 @@ Les logs analysés sont :
 - dmesg 
 - var/log/syslog 
 
+L'output du script est constitué de deux élements, les statistiques de la détection et un rapport d'intrusion.
+
+Pour les statistiques, on aura les nombres des différentes attaques détectées sur les logs et un tableau avec le nombre d'attaques en fonction de la source des logs.
+
+Pour le rapport d'intrusion, l'utilisateur précise le nombre de jours / d'heures / ou de minutes qu'il désire afficher. Ainsi s'il rentre "Minute" au premier input puis "5" au deuxième input, il aura les résultats de la détection d'intrusion sur les logs des 5 dernières minutes.
+
 La légende correspondant au sigle choisi pour les classes est explicité ci-dessous:
   - "RAS" :  "Aucune tentative d'intrusion n'a été détecté "
   - "IPD"   : On a détecté une adresse IP différente."
@@ -37,7 +43,5 @@ La légende correspondant au sigle choisi pour les classes est explicité ci-des
   - "SSH" : "On a détecté une tentative de connexion ssh. On est au début/milieu de l'attaque."
   - "ASM": "On a détecté une tentative d'attaque de serveur ftp. On est au stade avancé de l'attaque."
   - "EC": "On a détecté de trop nombreuses de tentatives d'intrusions. On est sur un état critique de votre pc, il se peut qu'il ait été compromis"
-    
-Pour le rapport d'intrusion, l'utilisateur précise le nombre de jours / d'heures / ou de minutes qu'il désire afficher. Ainsi s'il rentre "Minute" au premier input puis "5" au deuxième input, il aura les résultats de la détection d'intrusion sur les logs des 5 dernières minutes.
-   
+      
 Groupe composé de GAMER Axel, HADDOUNE Mohamed-Salah et LE ROUX Nathan
